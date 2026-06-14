@@ -1,4 +1,4 @@
-# iotdb
+# iot-storage
 
 **Path-based lightweight SQL database with REST API — MQTT-inspired hierarchical records.**
 
@@ -9,37 +9,37 @@ Think of it as MQTT topics meets SQL. Every path is a record. Query with SQL. Bu
 ## Install
 
 ```bash
-npm install -g iotdb
+npm install -g iot-storage
 ```
 
 ## Quick Start
 
 ```bash
 # Start as a daemon (background)
-iotdb start
+iot-storage start
 
 # Or run in foreground (debug mode)
-iotdb run
+iot-storage run
 ```
 
-By default, iotdb listens on `http://localhost:9123` and stores data in `~/.iotdb/data.json`.
+By default, iot-storage listens on `http://localhost:9123` and stores data in `~/.iot-storage/data.json`.
 
 ## CLI Commands
 
 | Command | Description |
 |---------|-------------|
-| `iotdb start` | Start as background daemon |
-| `iotdb stop` | Stop the daemon |
-| `iotdb restart` | Restart the daemon |
-| `iotdb run` | Run in foreground (debug mode) |
-| `iotdb status` | Check if daemon is running |
+| `iot-storage start` | Start as background daemon |
+| `iot-storage stop` | Stop the daemon |
+| `iot-storage restart` | Restart the daemon |
+| `iot-storage run` | Run in foreground (debug mode) |
+| `iot-storage status` | Check if daemon is running |
 
 ### Options
 
 | Flag | Description | Default |
 |------|-------------|---------|
 | `-p, --port <number>` | Server port | `9123` |
-| `-d, --data <path>` | JSON data file path | `~/.iotdb/data.json` |
+| `-d, --data <path>` | JSON data file path | `~/.iot-storage/data.json` |
 | `-b, --backend <name>` | Storage backend | `json` |
 | `-c, --config <path>` | Config file | — |
 
@@ -204,19 +204,19 @@ Paths work like MQTT topics:
 
 ## Configuration
 
-iotdb reads configuration from (in priority order):
+iot-storage reads configuration from (in priority order):
 
-1. **CLI flags** — `iotdb run --port 8080 --data ./mydata.json`
-2. **Local config** — `./iotdb.config.json` (in current directory)
-3. **Home config** — `~/.iotdb/config.json`
-4. **Environment** — `IOTDB_PORT=8080`, `IOTDB_DATA_FILE=./mydata.json`
-5. **Defaults** — port `9123`, data `~/.iotdb/data.json`
+1. **CLI flags** — `iot-storage run --port 8080 --data ./mydata.json`
+2. **Local config** — `./iot-storage.config.json` (in current directory)
+3. **Home config** — `~/.iot-storage/config.json`
+4. **Environment** — `IOT_STORAGE_PORT=8080`, `IOT_STORAGE_DATA_FILE=./mydata.json`
+5. **Defaults** — port `9123`, data `~/.iot-storage/data.json`
 
 Example config file:
 ```json
 {
   "port": 8080,
-  "dataFile": "/var/lib/iotdb/data.json",
+  "dataFile": "/var/lib/iot-storage/data.json",
   "backend": "json"
 }
 ```
@@ -225,10 +225,10 @@ Example config file:
 
 ## Backend Plugins
 
-iotdb supports pluggable backends. Currently `json` is the only built-in backend. To create a custom backend, extend the `Backend` base class:
+iot-storage supports pluggable backends. Currently `json` is the only built-in backend. To create a custom backend, extend the `Backend` base class:
 
 ```js
-const { backends } = require('iotdb');
+const { backends } = require('iot-storage');
 
 class MyBackend extends backends.Base {
   async connect(config) { /* ... */ }
@@ -246,16 +246,16 @@ class MyBackend extends backends.Base {
 ## Data Directory
 
 ```
-~/.iotdb/
-├── iotdb.pid        # Daemon PID file
+~/.iot-storage/
+├── iot-storage.pid        # Daemon PID file
 ├── config.json      # User configuration
 ├── data.json        # JSON data storage
 └── logs/
-    └── iotdb.log    # Daemon stdout/stderr logs
+    └── iot-storage.log    # Daemon stdout/stderr logs
 ```
 
 ---
 
 ## License
 
-MIT © iotdb contributors
+MIT © iot-storage contributors

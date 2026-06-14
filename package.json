@@ -1,10 +1,10 @@
 {
-  "name": "iotdb",
+  "name": "iot-storage",
   "version": "1.0.0",
   "description": "Path-based lightweight SQL database with REST API — MQTT-inspired hierarchical records",
   "main": "index.js",
   "bin": {
-    "iotdb": "./bin/cli.js"
+    "iot-storage": "./bin/cli.js"
   },
   "files": [
     "bin/",
@@ -39,7 +39,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/fmalekpour/iotdb"
+    "url": "https://github.com/fmalekpour/iot-storage"
   },
   "dependencies": {
     "commander": "^12.1.0",

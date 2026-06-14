@@ -10,7 +10,7 @@ describe('JSON Backend', () => {
   let tmpFile;
 
   beforeEach(async () => {
-    tmpFile = path.join(os.tmpdir(), `iotdb-test-${Date.now()}.json`);
+    tmpFile = path.join(os.tmpdir(), `iot-storage-test-${Date.now()}.json`);
     backend = new JsonBackend();
     await backend.connect({ dataFile: tmpFile });
   });

@@ -12,7 +12,7 @@ describe('Query Engine', () => {
   let tmpFile;
 
   beforeEach(async () => {
-    tmpFile = path.join(require('os').tmpdir(), `iotdb-qe-${Date.now()}.json`);
+    tmpFile = path.join(require('os').tmpdir(), `iot-storage-qe-${Date.now()}.json`);
     backend = new JsonBackend();
     await backend.connect({ dataFile: tmpFile });
     engine = new QueryEngine(backend);
