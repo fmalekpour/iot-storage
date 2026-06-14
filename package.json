@@ -1,0 +1,53 @@
+{
+  "name": "iotdb",
+  "version": "1.0.0",
+  "description": "Path-based lightweight SQL database with REST API — MQTT-inspired hierarchical records",
+  "main": "index.js",
+  "bin": {
+    "iotdb": "./bin/cli.js"
+  },
+  "files": [
+    "bin/",
+    "lib/",
+    "index.js",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "scripts": {
+    "start": "node bin/cli.js run",
+    "test": "jest --coverage",
+    "test:watch": "jest --watch",
+    "lint": "eslint lib/ bin/ test/",
+    "dev": "node --watch bin/cli.js run"
+  },
+  "keywords": [
+    "iot",
+    "database",
+    "sql",
+    "rest",
+    "mqtt",
+    "path",
+    "hierarchical",
+    "json",
+    "lightweight",
+    "embedded"
+  ],
+  "author": "Farhad Malekpour and Contributors",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fmalekpour/iotdb"
+  },
+  "dependencies": {
+    "commander": "^12.1.0",
+    "express": "^4.21.0",
+    "node-sql-parser": "^5.3.0"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "eslint": "^8.57.0"
+  }
+}

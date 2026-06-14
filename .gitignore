@@ -1,0 +1,5 @@
+node_modules/
+~/.iotdb/
+*.log
+coverage/
+.DS_Store
