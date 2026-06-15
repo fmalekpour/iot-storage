@@ -109,7 +109,7 @@ Response:
   "status": "ok",
   "uptime": 3600,
   "backend": "json",
-  "version": "1.0.0"
+  "version": "1.0.1"
 }
 ```
 
