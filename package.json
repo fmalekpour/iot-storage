@@ -1,6 +1,6 @@
 {
   "name": "iot-storage",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Path-based lightweight SQL database with REST API — MQTT-inspired hierarchical records",
   "main": "index.js",
   "bin": {
