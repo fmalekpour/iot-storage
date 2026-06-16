@@ -202,6 +202,88 @@ Paths work like MQTT topics:
 
 ---
 
+## Namespaces (`@`) — Isolated Data Files
+
+Use `@namespace` as the first segment of a path to store data in a separate JSON file. This keeps unrelated data isolated, improves performance for large datasets, and requires no setup — files are created automatically on first write.
+
+### How It Works
+
+| Path | Stored In |
+|------|-----------|
+| `/sensors/temp` | `data.json` (default) |
+| `/@fleet-a/sensors/temp` | `fleet-a.json` |
+| `/@warehouse/devices/pump` | `warehouse.json` |
+| `/@lab-east/sensors/+` | `lab-east.json` (wildcard reads) |
+
+All namespace files live in the same directory as `data.json` (`~/.iot-storage/` by default). Names are sanitized: `@` is stripped and `.json` is appended. There is NO limit on the number of namespaces.
+
+### Writing to a Namespace
+
+```sql
+-- This data goes into fleet-a.json
+INSERT INTO "/@fleet-a/sensors/temp" (value, unit) VALUES (23.5, 'C')
+
+-- This goes into data.json (no @ prefix)
+INSERT INTO "/sensors/temp" (value, unit) VALUES (22.1, 'C')
+```
+
+Or via REST:
+```bash
+curl -X PUT http://localhost:9123/data/@fleet-a/sensors/temp \
+  -H "Content-Type: application/json" \
+  -d '{"value": 23.5, "unit": "C"}'
+```
+
+### Querying Within a Namespace
+
+```sql
+-- Query only fleet-a's sensors
+SELECT * FROM "/@fleet-a/sensors/+"
+
+-- Sort and filter within a namespace
+SELECT * FROM "/@fleet-a/sensors/+" WHERE value > 20 ORDER BY value DESC
+```
+
+### Cross-Namespace Queries
+
+Use `@+` or `@#` wildcards to query across namespaces:
+
+```sql
+-- Query sensors from ALL namespaces
+SELECT * FROM "/@+/sensors/temp"
+
+-- Query everything across all namespaces
+SELECT * FROM "/#"
+
+-- Aggregation across namespaces
+SELECT AVG(value) FROM "/@+/sensors/+"
+```
+
+Results from cross-namespace queries include a `_namespace` field indicating which file each record came from.
+
+### Namespace Behavior
+
+- **Implicit creation** — write to `/@anyname/...` and `anyname.json` is created automatically
+- **Separation** — you can't accidentally join data between namespaces without `@+` or `@#`
+- **Identical schema support** — each namespace file is a full `JsonBackend`, supporting all operations
+- **No delete namespace** — to remove a namespace, delete the `.json` file from the data directory
+
+### Data Directory with Namespaces
+
+```
+~/.iot-storage/
+├── data.json          # Default namespace
+├── fleet-a.json       # @fleet-a namespace
+├── warehouse.json     # @warehouse namespace
+├── lab-east.json      # @lab-east namespace
+├── config.json
+├── iot-storage.pid
+└── logs/
+    └── iot-storage.log
+```
+
+---
+
 ## Configuration
 
 iot-storage reads configuration from (in priority order):
