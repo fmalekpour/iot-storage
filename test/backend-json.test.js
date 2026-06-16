@@ -169,4 +169,64 @@ describe('JSON Backend', () => {
       await b2.close();
     });
   });
+
+  // ── Field projection (GET /data/:parent/:field) ────────────────────────
+  //
+  // When a full path doesn't match a record, the server treats the last
+  // segment as a field name on the parent record. These tests simulate
+  // that logic directly against the backend.
+
+  describe('field projection', () => {
+    beforeEach(async () => {
+      await backend.upsert('/sensors/humidity', { value: 65, unit: '%' });
+    });
+
+    const projectField = async (backend, fullPath) => {
+      const lastSlash = fullPath.lastIndexOf('/');
+      if (lastSlash <= 0) return null;
+      const parentPath = fullPath.slice(0, lastSlash);
+      const fieldName = fullPath.slice(lastSlash + 1);
+      if (!fieldName || fieldName.startsWith('_')) return null;
+      const parent = await backend.getExact(parentPath);
+      if (parent && fieldName in parent) return parent[fieldName];
+      return undefined; // field doesn't exist
+    };
+
+    it('returns the full record for an exact path', async () => {
+      const record = await backend.getExact('/sensors/humidity');
+      expect(record).toBeTruthy();
+      expect(record.value).toBe(65);
+      expect(record.unit).toBe('%');
+    });
+
+    it('returns a single field value via parent/field projection', async () => {
+      const value = await projectField(backend, '/sensors/humidity/value');
+      expect(value).toBe(65);
+    });
+
+    it('returns a string field via parent/field projection', async () => {
+      const value = await projectField(backend, '/sensors/humidity/unit');
+      expect(value).toBe('%');
+    });
+
+    it('returns null for system _-prefixed fields', async () => {
+      const value = await projectField(backend, '/sensors/humidity/_created');
+      expect(value).toBeNull();
+    });
+
+    it('returns null for _path system field', async () => {
+      const value = await projectField(backend, '/sensors/humidity/_path');
+      expect(value).toBeNull();
+    });
+
+    it('returns undefined for non-existent field', async () => {
+      const value = await projectField(backend, '/sensors/humidity/nonexistent');
+      expect(value).toBeUndefined();
+    });
+
+    it('returns undefined when parent does not exist', async () => {
+      const value = await projectField(backend, '/nonexistent/parent/field');
+      expect(value).toBeUndefined();
+    });
+  });
 });
