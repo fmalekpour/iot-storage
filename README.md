@@ -97,6 +97,28 @@ curl -X PUT http://localhost:9123/data/sensors/humidity \
 curl -X DELETE http://localhost:9123/data/sensors/temp
 ```
 
+#### Field Projection
+
+Append a field name to get just that value instead of the full record:
+
+```bash
+# Get the full record
+curl http://localhost:9123/data/sensors/humidity
+# → {"value": 65, "unit": "%", "_path": "/sensors/humidity", ...}
+
+# Get just the 'value' field
+curl http://localhost:9123/data/sensors/humidity/value
+# → 65
+
+# Get just the 'unit' field
+curl http://localhost:9123/data/sensors/humidity/unit
+# → "%"
+```
+
+Returns `404` if the field doesn't exist. System fields (`_path`, `_created`, `_updated`) cannot be accessed this way — they require the full record.
+
+#### Direct PUT (Set a field)
+
 ### `GET /health`
 
 ```bash
